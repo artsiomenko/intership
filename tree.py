@@ -1,140 +1,136 @@
 class Node:
-    def __init__(self, value):
-        self.value = value
-        self.left = None
-        self.right = None
+    def __init__(self, data):
+        self.data = data
+        self.left: Node = None
+        self.right: Node = None
         self.height = 1
+
+    def find(self, value):
+        return value == self.data or \
+               value < self.data and self.left and self.left.find(value) or \
+               value > self.data and self.right and self.right.find(value)
+
+    def to_list(self):
+        return [self.data] + \
+               (self.left.to_list() if self.left else []) + \
+               (self.right.to_list() if self.right else [])
+
+    def insert(self, new_value):
+        if new_value < self.data:
+            if self.left is None:
+                self.left = Node(new_value)
+            else:
+                self.left = self.left.insert(new_value)
+        else:
+            if self.right is None:
+                self.right = Node(new_value)
+            else:
+                self.right = self.right.insert(new_value)
+        return self.balance()
+
+    def remove(self, value):
+        if value < self.data:
+            self.left = self.left.remove(value)
+        elif value > self.data:
+            self.right = self.right.remove(value)
+        else:
+            q = self.left
+            r = self.right
+            if r is None:
+                return q
+            min = r.findmin()
+            min.right = r.removemin()
+            min.left = q
+            return min.balance()
+        return self.balance()
+
+    def removemin(self):
+        if self.left is None:
+            return self.right
+        self.left = self.left.removemin()
+        return self.balance()
+
+    def findmin(self):
+        return self if self.left is None else self.left.findmin()
+
+    def balance(self):
+        self.fixheight()
+        if self.bfactor() == 2:
+            if self.right.bfactor() < 0:
+                self.right = self.right.rotate_right()
+            return self.rotate_left()
+        if self.bfactor() == -2:
+            if self.left.bfactor() > 0:
+                self.left = self.left.rotate_left()
+            return self.rotate_right()
+        return self
+
+    def fixheight(self):
+        left_height = self.left_height()
+        right_height = self.right_height()
+        self.height = (left_height if left_height > right_height else right_height) + 1
+
+    def bfactor(self):
+        return self.right_height() - self.left_height()
+
+    def left_height(self):
+        return self.left.height if self.left else 0
+
+    def right_height(self):
+        return self.right.height if self.right else 0
+
+    def rotate_right(self):
+        q = self.left
+        self.left = q.right
+        q.right = self
+        self.fixheight()
+        q.fixheight()
+        return q
+
+    def rotate_left(self):
+        p = self.right
+        self.right = p.left
+        p.left = self
+        self.fixheight()
+        p.fixheight()
+        return p
+
+    def to_dict(self, k=0):
+        d = {}
+        if self.data:
+            d[k] = self.data
+            d['left'] = self.left.to_dict(k + 1) if self.left else {}
+            d['right'] = self.right.to_dict(k + 1) if self.right else {}
+        return d
 
 
 class Tree:
+    def __init__(self):
+        self.root: Node = None
 
-    def insert_node(self, root, value):
-
-        if not root:
-            return Node(value)
-        elif value < root.value:
-            root.left = self.insert_node(root.left, value)
+    def insert(self, new_value):
+        if self.root is None:
+            self.root = Node(new_value)
         else:
-            root.right = self.insert_node(root.right, value)
+            self.root = self.root.insert(new_value)
 
-        root.height = 1 + max(self.avl_Height(root.left),
-                              self.avl_Height(root.right))
+    def remove(self, value):
+        if self.root is not None:
+            self.root = self.root.remove(value)
 
-        # Update the balance factor and balance the tree
-        balanceFactor = self.avl_BalanceFactor(root)
-        if balanceFactor > 1:
-            if value < root.left.value:
-                return self.rightRotate(root)
-            else:
-                root.left = self.leftRotate(root.left)
-                return self.rightRotate(root)
+    def find(self, value):
+        return self.root.find(value)
 
-        if balanceFactor < -1:
-            if value > root.right.value:
-                return self.leftRotate(root)
-            else:
-                root.right = self.rightRotate(root.right)
-                return self.leftRotate(root)
+    def to_list(self):
+        return self.root.to_list()
 
-        return root
-
-    def avl_Height(self, root):
-        if not root:
-            return 0
-        return root.height
-
-    # Get balance factore of the node
-    def avl_BalanceFactor(self, root):
-        if not root:
-            return 0
-        return self.avl_Height(root.left) - self.avl_Height(root.right)
-
-    def avl_MinValue(self, root):
-        if root is None or root.left is None:
-            return root
-        return self.avl_MinValue(root.left)
-
-    def preOrder(self, root):
-        if not root:
-            return
-        print("{0} ".format(root.value), end=" ")
-        self.preOrder(root.left)
-        self.preOrder(root.right)
-
-    def leftRotate(self, b):
-        a = b.right
-        T2 = a.left
-        a.left = b
-        b.right = T2
-        b.height = 1 + max(self.avl_Height(b.left),
-                           self.avl_Height(b.right))
-        a.height = 1 + max(self.avl_Height(a.left),
-                           self.avl_Height(a.right))
-        return a
-
-    def rightRotate(self, b):
-        a = b.left
-        T3 = a.right
-        a.right = b
-        b.left = T3
-        b.height = 1 + max(self.avl_Height(b.left),
-                           self.avl_Height(b.right))
-        a.height = 1 + max(self.avl_Height(a.left),
-                           self.avl_Height(a.right))
-        return a
-
-    def delete_node(self, root, value):
-
-        # Find the node to be deleted and remove it
-        if not root:
-            return root
-        elif value < root.value:
-            root.left = self.delete_node(root.left, value)
-        elif value > root.value:
-            root.right = self.delete_node(root.right, value)
-        else:
-            if root.left is None:
-                temp = root.right
-                root = None
-                return temp
-            elif root.right is None:
-                temp = root.left
-                root = None
-                return temp
-            temp = self.avl_MinValue(root.right)
-            root.value = temp.key
-            root.right = self.delete_node(root.right, temp.value)
-        if root is None:
-            return root
-
-        # Update the balance factor of nodes
-        root.height = 1 + max(self.avl_Height(root.left), self.avl_Height(root.right))
-        balanceFactor = self.avl_BalanceFactor(root)
-
-        # Balance the tree
-        if balanceFactor > 1:
-            if self.avl_BalanceFactor(root.left) >= 0:
-                return self.rightRotate(root)
-            else:
-                root.left = self.leftRotate(root.left)
-                return self.rightRotate(root)
-        if balanceFactor < -1:
-            if self.avl_BalanceFactor(root.right) <= 0:
-                return self.leftRotate(root)
-            else:
-                root.right = self.rightRotate(root.right)
-                return self.leftRotate(root)
-        return root
+    def to_dict(self):
+        return self.root.to_dict()
 
 
-Tree = Tree()
-root = None
-root = Tree.insert_node(root, 40)
-root = Tree.insert_node(root, 60)
-root = Tree.insert_node(root, 50)
-root = Tree.insert_node(root, 70)
-
-
-Tree.preOrder(root)
-Tree.delete_node(root, 40)
-Tree.preOrder(root)
+tree = Tree()
+tree.insert(22)
+tree.insert(11)
+tree.insert(25)
+tree.insert(9)
+print(tree.to_dict())
