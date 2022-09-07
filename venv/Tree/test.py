@@ -1,5 +1,5 @@
 import unittest
-from AVLTree import Tree
+from venv.Tree.AVLTree import Tree
 
 
 class TestAVLTree(unittest.TestCase):
