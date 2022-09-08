@@ -82,5 +82,6 @@ class TestATM(unittest.TestCase):
         self.assertEqual(card.get(550), [50, 100, 100, 100, 100, 100])
         self.assertEqual(card.dict_denomination, {5: 2, 10: 4, 20: 4, 50: 4, 100: 0})
 
+
 if __name__ == "__main__":
     unittest.main()
