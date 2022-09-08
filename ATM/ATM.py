@@ -24,7 +24,8 @@ class ATM:
         return True if self.get_balance() > 0 else False
 
     def choice_of_banknotes(self, total):
-        list_denom = [int(key) for key, value in self.dict_denomination.items() if self.dict_denomination[key] > 0]
+        for_return = total
+        list_denom = [key for key, value in self.dict_denomination.items() if self.dict_denomination[key] > 0]
         f = [25] * (total + 1)
         f[0] = 0
         for k in range(1, total + 1):
@@ -45,7 +46,7 @@ class ATM:
                         self.dict_denomination[elem] -= 1
                     else:
                         continue
-        return result
+        return result if for_return == sum(result) else "Error"
 
 
 class TestATM(unittest.TestCase):
