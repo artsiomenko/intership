@@ -18,7 +18,7 @@ class ATM:
             return print('Insufficient balance')
 
     def choice_of_banknotes(self, total):
-        list_denom = [int(key) for key in self.dict_denomination.keys()]
+        list_denom = [int(key) for key, value in self.dict_denomination.items() if self.dict_denomination[key] > 0]
         f = [1000] * (total + 1)
         f[0] = 0
         for k in range(1, total + 1):
@@ -38,9 +38,11 @@ class ATM:
 dict_denom = {'5': 5, '10': 5, '20': 5, '50': 5, '100': 5}
 my_card = ATM('aya', '12345678', dict_denom)
 print(my_card.get_balance())
+print(my_card.get(2500))
 print(my_card.get(15))
 print(my_card.get(25))
 print(my_card.get(60))
+print(my_card.get(260))
 
 
 
