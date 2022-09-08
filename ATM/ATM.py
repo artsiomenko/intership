@@ -15,7 +15,7 @@ class ATM:
 
     def get(self, total):
         balance = self.get_balance()
-        if total < balance:
+        if total <= balance:
             return self.choice_of_banknotes(total)
         else:
             return 'Insufficient balance'
@@ -24,7 +24,6 @@ class ATM:
         return True if self.get_balance() > 0 else False
 
     def choice_of_banknotes(self, total):
-        for_return = total
         list_denom = [key for key, value in self.dict_denomination.items() if self.dict_denomination[key] > 0]
         f = [25] * (total + 1)
         f[0] = 0
@@ -35,8 +34,7 @@ class ATM:
                     f[k] = f[k - elem]
             f[k] += 1
         result = []
-        count = 0
-        while total != 0 and self.atm_not_empty() and count < len(list_denom):
+        while total != 0 and self.atm_not_empty():
             for i in range(len(list_denom)):
                 elem = list_denom[i]
                 if total - elem >= 0 and f[total] == f[total - elem] + 1:
@@ -46,7 +44,7 @@ class ATM:
                         self.dict_denomination[elem] -= 1
                     else:
                         continue
-        return result if for_return == sum(result) else "Error"
+        return result
 
 
 class TestATM(unittest.TestCase):
