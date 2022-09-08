@@ -30,9 +30,13 @@ class ATM:
         while total != 0:
             for i in range(len(list_denom)):
                 if total - list_denom[i] >= 0 and f[total] == f[total - list_denom[i]] + 1:
-                    result.append(list_denom[i])
-                    total -= list_denom[i]
-        print(result)
+                    if self.dict_denomination[str(list_denom[i])] > 0:
+                        result.append(list_denom[i])
+                        total -= list_denom[i]
+                        self.dict_denomination[str(list_denom[i])] -= 1
+                    else:
+                        continue
+        return result
 
 
 dict_denom = {'5': 5, '10': 5, '20': 5, '50': 5, '100': 5}
@@ -43,6 +47,11 @@ print(my_card.get(15))
 print(my_card.get(25))
 print(my_card.get(60))
 print(my_card.get(260))
+print(my_card.dict_denomination)
+print(my_card.get(10))
+print(my_card.get(10))
+print(my_card.get(10))
+print(my_card.dict_denomination)
 
 
 
