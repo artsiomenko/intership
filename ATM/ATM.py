@@ -5,26 +5,20 @@ class ATM:
     def __init__(self, denomination):
         self.denomination = denomination
 
-    def get_balance(self):
+    def balance(self, total):
         balance = 0
         for key, value in self.denomination.items():
-            balance += int(key) * value
-        return balance
-
-    def get_useful_balance(self, total):
-        balance = 0
-        for key, value in self.denomination.items():
-            if (key <= total):
+            if key <= total:
                 balance += int(key) * value
         return balance
 
     def get(self, total):
-        if total <= self.get_useful_balance(total):
-            return self.choice_of_banknotes(total)
+        if total <= self.balance(total):
+            return self.choice(total)
         else:
             return 'Insufficient balance'
 
-    def choice_of_banknotes(self, total):
+    def choice(self, total):
         list_denom = [key for key, value in self.denomination.items() if self.denomination[key] > 0]
         f = [25] * (total + 1)
         f[0] = 0
@@ -43,18 +37,13 @@ class ATM:
                         result.append(elem)
                         total -= elem
                         self.denomination[elem] -= 1
-
         return result
 
 
 class TestATM(unittest.TestCase):
-    def test_get_balance_925(self):
-        atm = ATM({5: 5, 10: 5, 20: 5, 50: 5, 100: 5})
-        self.assertEqual(atm.get_balance(), 925)
 
     def test_get_insufficient_balance(self):
         atm = ATM({5: 5, 10: 5, 20: 5, 50: 5, 100: 5})
-        self.assertEqual(atm.get_balance(), 925)
         self.assertEqual(atm.get(930), 'Insufficient balance')
 
     def test_get_5(self):
