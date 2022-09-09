@@ -11,8 +11,15 @@ class ATM:
             balance += int(key) * value
         return balance
 
+    def get_useful_balance(self, total):
+        balance = 0
+        for key, value in self.denomination.items():
+            if (key <= total):
+                balance += int(key) * value
+        return balance
+
     def get(self, total):
-        if total <= self.get_balance():
+        if total <= self.get_useful_balance(total):
             return self.choice_of_banknotes(total)
         else:
             return 'Insufficient balance'
@@ -36,6 +43,7 @@ class ATM:
                         result.append(elem)
                         total -= elem
                         self.denomination[elem] -= 1
+
         return result
 
 
@@ -58,10 +66,10 @@ class TestATM(unittest.TestCase):
         atm = ATM({5: 5, 10: 5, 20: 5, 50: 5, 100: 5})
         self.assertEqual(atm.get(15), [5, 10])
 
-    #def test_get_10(self):
-    #    atm = ATM({5: 1, 10: 0, 20: 5, 50: 5, 100: 5})
-    #    self.assertEqual(atm.get(10), [])
-    #    self.assertEqual(atm.denomination, {5: 1, 10: 0, 20: 5, 50: 5, 100: 5})
+    def test_get_10(self):
+        atm = ATM({5: 1, 10: 0, 20: 5, 50: 5, 100: 5})
+        self.assertEqual(atm.get(10), 'Insufficient balance')
+        self.assertEqual(atm.denomination, {5: 1, 10: 0, 20: 5, 50: 5, 100: 5})
 
 
 if __name__ == "__main__":
