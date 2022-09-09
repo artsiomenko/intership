@@ -36,9 +36,6 @@ class ATM:
                         result.append(elem)
                         total -= elem
                         self.denomination[elem] -= 1
-                    else:
-                        continue
-
         return result
 
 
@@ -61,14 +58,10 @@ class TestATM(unittest.TestCase):
         atm = ATM({5: 5, 10: 5, 20: 5, 50: 5, 100: 5})
         self.assertEqual(atm.get(15), [5, 10])
 
-    def test_get_5_15_25(self):
-        atm = ATM({5: 5, 10: 5, 20: 5, 50: 5, 100: 5})
-        self.assertEqual(atm.get(5), [5])
-        self.assertEqual(atm.get(15), [5, 10])
-        self.assertEqual(atm.get(25), [5, 20])
-        self.assertEqual(atm.denomination, {5: 2, 10: 4, 20: 4, 50: 5, 100: 5})
-        self.assertEqual(atm.get(550), [50, 100, 100, 100, 100, 100])
-        self.assertEqual(atm.denomination, {5: 2, 10: 4, 20: 4, 50: 4, 100: 0})
+    def test_get_10(self):
+        atm = ATM({5: 1, 10: 0, 20: 5, 50: 5, 100: 5})
+        self.assertEqual(atm.get(10), [])
+        self.assertEqual(atm.denomination, {5: 1, 10: 0, 20: 5, 50: 5, 100: 5})
 
 
 if __name__ == "__main__":
