@@ -2,8 +2,7 @@ import unittest
 
 
 class ATM:
-    def __init__(self, name, dict_denomination):
-        self.name = name
+    def __init__(self, dict_denomination):
         self.dict_denomination = dict_denomination
 
     def get_balance_atm(self):
@@ -52,39 +51,38 @@ class ATM:
 
 class TestATM(unittest.TestCase):
     def test_get_balance_925(self):
-        d = {5: 5, 10: 5, 20: 5, 50: 5, 100: 5}
-        card = ATM('aya', d)
-        self.assertEqual(card.get_balance_atm(), 925)
+        atm = ATM({5: 5, 10: 5, 20: 5, 50: 5, 100: 5})
+        self.assertEqual(atm.get_balance_atm(), 925)
 
     def test_get_insufficient_balance(self):
-        d = {5: 5, 10: 5, 20: 5, 50: 5, 100: 5}
-        card = ATM('aya', d)
-        self.assertEqual(card.get_balance_atm(), 925)
-        self.assertEqual(card.get(930, 930), 'Insufficient ATM balance')
+        atm = ATM({5: 5, 10: 5, 20: 5, 50: 5, 100: 5})
+        self.assertEqual(atm.get_balance_atm(), 925)
+        self.assertEqual(atm.get(930, 930), 'Insufficient ATM balance')
 
     def test_get_insufficient_user_balance(self):
-        d = {5: 5, 10: 5, 20: 5, 50: 5, 100: 5}
-        card = ATM('aya', d)
-        self.assertEqual(card.get_balance_atm(), 925)
-        self.assertEqual(card.get(925, 900), 'Insufficient user balance')
+        atm = ATM({5: 5, 10: 5, 20: 5, 50: 5, 100: 5})
+        self.assertEqual(atm.get_balance_atm(), 925)
+        self.assertEqual(atm.get(925, 900), 'Insufficient user balance')
 
     def test_get_5(self):
-        d = {5: 5, 10: 5, 20: 5, 50: 5, 100: 5}
-        card = ATM('aya', d)
-        self.assertEqual(card.get(5, 5), ([5], 'Users balance - 0'))
-        self.assertEqual(card.dict_denomination, {5: 4, 10: 5, 20: 5, 50: 5, 100: 5})
+        atm = ATM({5: 5, 10: 5, 20: 5, 50: 5, 100: 5})
+        self.assertEqual(atm.get(5, 5), ([5], 'Users balance - 0'))
+        self.assertEqual(atm.dict_denomination, {5: 4, 10: 5, 20: 5, 50: 5, 100: 5})
 
     def test_get_15(self):
-        d = {5: 5, 10: 5, 20: 5, 50: 5, 100: 5}
-        card = ATM('aya', d)
-        self.assertEqual(card.get(15, 15), ([5, 10], 'Users balance - 0'))
-        self.assertEqual(card.dict_denomination, {5: 4, 10: 4, 20: 5, 50: 5, 100: 5})
+        atm = ATM({5: 5, 10: 5, 20: 5, 50: 5, 100: 5})
+        self.assertEqual(atm.get(15, 15), ([5, 10], 'Users balance - 0'))
+        self.assertEqual(atm.dict_denomination, {5: 4, 10: 4, 20: 5, 50: 5, 100: 5})
 
     def test_get_5_15_25(self):
-        d = {5: 5, 10: 5, 20: 5, 50: 5, 100: 5}
-        card = ATM('aya', d)
-        self.assertEqual(card.get(25, 50), ([5, 20], 'Users balance - 25'))
-        self.assertEqual(card.dict_denomination, {5: 4, 10: 5, 20: 4, 50: 5, 100: 5})
+        atm = ATM({5: 5, 10: 5, 20: 5, 50: 5, 100: 5})
+        self.assertEqual(atm.get(25, 50), ([5, 20], 'Users balance - 25'))
+        self.assertEqual(atm.dict_denomination, {5: 4, 10: 5, 20: 4, 50: 5, 100: 5})
+
+    def test_get_60(self):
+        atm = ATM({5: 0, 10: 1, 20: 5, 50: 0, 100: 5})
+        self.assertEqual(atm.get(60, 100), ([20, 20, 20], 'Users balance - 40'))
+        self.assertEqual(atm.dict_denomination, {5: 0, 10: 1, 20: 2, 50: 0, 100: 5})
 
 if __name__ == "__main__":
     unittest.main()
