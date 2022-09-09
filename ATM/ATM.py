@@ -38,6 +38,7 @@ class ATM:
                         self.denomination[elem] -= 1
                     else:
                         continue
+
         return result
 
 
