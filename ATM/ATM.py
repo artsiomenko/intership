@@ -62,6 +62,12 @@ class TestATM(unittest.TestCase):
         self.assertEqual(card.get_balance_atm(), 925)
         self.assertEqual(card.get(930, 930), 'Insufficient ATM balance')
 
+    def test_get_insufficient_user_balance(self):
+        d = {5: 5, 10: 5, 20: 5, 50: 5, 100: 5}
+        card = ATM('aya', d)
+        self.assertEqual(card.get_balance_atm(), 925)
+        self.assertEqual(card.get(925, 900), 'Insufficient user balance')
+
     def test_get_5(self):
         d = {5: 5, 10: 5, 20: 5, 50: 5, 100: 5}
         card = ATM('aya', d)
