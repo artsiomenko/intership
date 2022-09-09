@@ -1,12 +1,6 @@
 import unittest
 
 
-class User:
-    def __init__(self, balance, amount='1111000011110000'):
-        self.amount = amount
-        self.balance = balance
-
-
 class ATM:
     def __init__(self, name, dict_denomination):
         self.name = name
@@ -19,16 +13,16 @@ class ATM:
         return balance
 
     def get(self, total, user_balance):
-        user = User(user_balance)
         atm_balance = self.get_balance_atm()
-        if user.balance <= atm_balance:
-            if total <= user.balance:
-                user.balance -= total
-                return self.choice_of_banknotes(total)
+        if user_balance <= atm_balance:
+            if total <= user_balance:
+                user_balance -= total
+                return self.choice_of_banknotes(total), f'Users balance - {user_balance}'
             else:
                 return 'Insufficient user balance'
         else:
             return 'Insufficient ATM balance'
+
     def atm_not_empty(self):
         return True if self.get_balance_atm() > 0 else False
 
@@ -71,19 +65,19 @@ class TestATM(unittest.TestCase):
     def test_get_5(self):
         d = {5: 5, 10: 5, 20: 5, 50: 5, 100: 5}
         card = ATM('aya', d)
-        self.assertEqual(card.get(5, 5), [5])
+        self.assertEqual(card.get(5, 5), ([5], 'Users balance - 0'))
         self.assertEqual(card.dict_denomination, {5: 4, 10: 5, 20: 5, 50: 5, 100: 5})
 
     def test_get_15(self):
         d = {5: 5, 10: 5, 20: 5, 50: 5, 100: 5}
         card = ATM('aya', d)
-        self.assertEqual(card.get(15, 15), [5, 10])
+        self.assertEqual(card.get(15, 15), ([5, 10], 'Users balance - 0'))
         self.assertEqual(card.dict_denomination, {5: 4, 10: 4, 20: 5, 50: 5, 100: 5})
 
     def test_get_5_15_25(self):
         d = {5: 5, 10: 5, 20: 5, 50: 5, 100: 5}
         card = ATM('aya', d)
-        self.assertEqual(card.get(25, 50), [5, 20])
+        self.assertEqual(card.get(25, 50), ([5, 20], 'Users balance - 25'))
         self.assertEqual(card.dict_denomination, {5: 4, 10: 5, 20: 4, 50: 5, 100: 5})
 
 if __name__ == "__main__":
