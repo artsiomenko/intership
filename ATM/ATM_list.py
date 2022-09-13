@@ -1,9 +1,7 @@
 import unittest
-import sys
 
 
 class ATM:
-    sys.setrecursionlimit(150000)
 
     def __init__(self, denomination):
         self.denomination = denomination
@@ -16,22 +14,16 @@ class ATM:
         return denom
 
     def prepend(self, e, lists):
-        if len(lists) == 0:
-            return []
-        return [[e] + lists[0]] + self.prepend(e, lists[1:])
+        return [] if len(lists) == 0 else [[e] + lists[0]] + self.prepend(e, lists[1:])
 
     def duplicate(self, e, lists):
         return lists + self.prepend(e, lists)
 
     def f(self, d):
-        if len(d) == 0:
-            return [[]]
-        return self.duplicate(d[0], self.f(d[1:]))
+        return [[]] if len(d) == 0 else self.duplicate(d[0], self.f(d[1:]))
 
     def get(self, total):
-        list_denom = self.get_list()
-        list_variants = self.f(list_denom)
-        res = list(filter(lambda x: x and sum(x) == total, list_variants))
+        res = list(filter(lambda x: x and sum(x) == total, self.f(self.get_list())))
         unique = set()
         for elem in res:
             unique.add(tuple(elem))
@@ -56,9 +48,8 @@ class TestATM(unittest.TestCase):
         self.assertEqual(atm.get(120), {(60, 60), (5, 5, 50, 60), (5, 5, 10, 50, 50), (10, 50, 60), (5, 5, 10, 100)})
 
     def test_get_675(self):
-        atm = ATM({5: 1, 10: 2, 50: 5, 100: 5})
-        self.assertEqual(atm.get(675), {(5, 10, 10, 50, 50, 50, 50, 50, 100, 100, 100, 100),
- (5, 10, 10, 50, 50, 50, 100, 100, 100, 100, 100)})
+        atm = ATM({5: 1, 10: 1, 50: 4, 100: 2, 200: 2})
+        self.assertEqual(atm.get(515), {(5, 10, 50, 50, 50, 50, 100, 200), (5, 10, 50, 50, 100, 100, 200), (5, 10, 50, 50, 200, 200), (5, 10, 100, 200, 200)})
 
     def test_get_10(self):
         atm = ATM({5: 1, 10: 0, 20: 1, 50: 1, 100: 1})
