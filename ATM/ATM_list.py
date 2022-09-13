@@ -6,9 +6,9 @@ class ATM:
     def __init__(self, denomination):
         self.denomination = denomination
 
-    def get_list(self):
-        denom = list(reduce(lambda a, acc: a + acc, map(lambda x, y: [x] * y, self.denomination.keys(),
-                                                        self.denomination.values())))
+    def get_list(self, total):
+        denom = list(reduce(lambda a, acc: a + acc, map(lambda x, y: [x] * y if x <= total else [],
+                                                        self.denomination.keys(), self.denomination.values())))
         return denom
 
     def variant(self, e, lists):
@@ -21,7 +21,7 @@ class ATM:
         return [[]] if len(d) == 0 else self.duplicate(d[0], self.variants(d[1:]))
 
     def get(self, total):
-        res = list(filter(lambda x: x and sum(x) == total, self.variants(self.get_list())))
+        res = list(filter(lambda x: x and sum(x) == total, self.variants(self.get_list(total))))
         unique = set()
         for elem in res:
             unique.add(tuple(elem))
