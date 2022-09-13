@@ -19,11 +19,11 @@ class ATM:
     def duplicate(self, e, lists):
         return lists + self.prepend(e, lists)
 
-    def f(self, d):
-        return [[]] if len(d) == 0 else self.duplicate(d[0], self.f(d[1:]))
+    def variants(self, d):
+        return [[]] if len(d) == 0 else self.duplicate(d[0], self.variants(d[1:]))
 
     def get(self, total):
-        res = list(filter(lambda x: x and sum(x) == total, self.f(self.get_list())))
+        res = list(filter(lambda x: x and sum(x) == total, self.variants(self.get_list())))
         unique = set()
         for elem in res:
             unique.add(tuple(elem))
@@ -49,7 +49,8 @@ class TestATM(unittest.TestCase):
 
     def test_get_675(self):
         atm = ATM({5: 1, 10: 1, 50: 4, 100: 2, 200: 2})
-        self.assertEqual(atm.get(515), {(5, 10, 50, 50, 50, 50, 100, 200), (5, 10, 50, 50, 100, 100, 200), (5, 10, 50, 50, 200, 200), (5, 10, 100, 200, 200)})
+        self.assertEqual(atm.get(515), {(5, 10, 50, 50, 50, 50, 100, 200), (5, 10, 50, 50, 100, 100, 200),
+                                        (5, 10, 50, 50, 200, 200), (5, 10, 100, 200, 200)})
 
     def test_get_10(self):
         atm = ATM({5: 1, 10: 0, 20: 1, 50: 1, 100: 1})
