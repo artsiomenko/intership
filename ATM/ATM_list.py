@@ -13,11 +13,11 @@ class ATM:
                 denom.append(key)
         return denom
 
-    def prepend(self, e, lists):
-        return [] if len(lists) == 0 else [[e] + lists[0]] + self.prepend(e, lists[1:])
+    def variant(self, e, lists):
+        return [] if len(lists) == 0 else [[e] + lists[0]] + self.variant(e, lists[1:])
 
     def duplicate(self, e, lists):
-        return lists + self.prepend(e, lists)
+        return lists + self.variant(e, lists)
 
     def variants(self, d):
         return [[]] if len(d) == 0 else self.duplicate(d[0], self.variants(d[1:]))
