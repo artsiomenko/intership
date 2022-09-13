@@ -1,16 +1,14 @@
 import unittest
+from functools import reduce
 
 
 class ATM:
-
     def __init__(self, denomination):
         self.denomination = denomination
 
     def get_list(self):
-        denom = []
-        for key, value in self.denomination.items():
-            for i in range(value):
-                denom.append(key)
+        denom = list(reduce(lambda a, acc: a + acc, map(lambda x, y: [x] * y, self.denomination.keys(),
+                                                        self.denomination.values())))
         return denom
 
     def variant(self, e, lists):
