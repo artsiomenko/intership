@@ -15,7 +15,7 @@ class ATM:
         return [] if len(lists) == 0 else [[e] + lists[0]] + self.variant(e, lists[1:])
 
     def duplicate(self, e, lists):
-        lists = [list(elem) for elem in {tuple(elem)for elem in lists}]
+        lists = [list(elem) for elem in {tuple(elem) for elem in lists}]
         return lists + self.variant(e, lists)
 
     def variants(self, d):
@@ -23,9 +23,7 @@ class ATM:
 
     def get(self, total):
         res = list(filter(lambda x: x and sum(x) == total, self.variants(self.get_list(total))))
-        unique = set()
-        for elem in res:
-            unique.add(tuple(elem))
+        unique = {tuple(elem) for elem in res}
         return unique or "I can't give that amount"
 
 
@@ -59,11 +57,23 @@ class TestATM(unittest.TestCase):
         atm = ATM({5: 0, 10: 0, 20: 3, 50: 0, 100: 5})
         self.assertEqual(atm.get(50), "I can't give that amount")
 
-    def test_get_speed(self):
+    def test_get_speed_after_improvements(self):
         atm = ATM({5: 6, 10: 5, 20: 2, 50: 1, 100: 1})
-        self.assertEqual(atm.get(30), {(5, 5, 5, 5, 5, 5), (5, 5, 5, 5, 10), (5, 5, 10, 10),  (5, 5, 20), (10, 10, 10),
-                                    (10, 20)})
+        self.assertEqual(atm.get(30), {(5, 5, 5, 5, 5, 5), (5, 5, 5, 5, 10), (5, 5, 10, 10), (5, 5, 20), (10, 10, 10),
+                                       (10, 20)})
 
+    def test_can_get_money_more_than_3000(self):
+        atm = ATM({5: 6, 10: 5, 20: 2, 50: 1000, 100: 2000})
+        self.assertEqual(atm.get(30), {(5, 5, 5, 5, 5, 5), (5, 5, 5, 5, 10), (5, 5, 10, 10), (5, 5, 20), (10, 10, 10),
+                                       (10, 20)})
+
+    def test_can_get_with_large_number_of_banknotes_5(self):
+        atm = ATM({5: 950, 10: 10, 20: 2, 50: 1000, 100: 2000})
+        self.assertEqual(atm.get(5), {(5, )})
+
+    def test_can_get_with_large_number_of_banknotes_10(self):
+        atm = ATM({5: 2, 10: 400, 20: 2, 50: 1000, 100: 2000})
+        self.assertEqual(atm.get(10), {(10, ), (5, 5)})
 
 if __name__ == "__main__":
     unittest.main()
