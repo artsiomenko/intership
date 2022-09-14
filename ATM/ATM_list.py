@@ -7,7 +7,8 @@ class ATM:
         self.denomination = denomination
 
     def get_list(self, total):
-        denom = list(reduce(lambda a, acc: a + acc, map(lambda x, y: [x] * y if x <= total else [],
+        denom = list(reduce(lambda a, acc: a + acc, map(lambda x, y: ([x] * (total // x) if (total // x) <= y
+                                                                      else [x] * y) if x <= total else [],
                                                         self.denomination.keys(), self.denomination.values())))
         return denom
 
@@ -72,8 +73,8 @@ class TestATM(unittest.TestCase):
         self.assertEqual(atm.get(5), {(5, )})
 
     def test_can_get_10_with_large_number_of_banknotes(self):
-        atm = ATM({5: 2, 10: 400, 20: 1000, 50: 1000, 100: 2000})
-        self.assertEqual(atm.get(10), {(10, ), (5, 5)})
+        atm = ATM({5: 1000, 10: 1000, 20: 1000, 50: 1000, 100: 2000})
+        self.assertEqual(atm.get(20), {(10, 10), (5, 5, 5, 5), (5, 5, 10), (20,)})
 
 if __name__ == "__main__":
     unittest.main()
