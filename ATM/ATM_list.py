@@ -15,6 +15,7 @@ class ATM:
         return [] if len(lists) == 0 else [[e] + lists[0]] + self.variant(e, lists[1:])
 
     def duplicate(self, e, lists):
+        lists = [list(elem) for elem in {tuple(elem)for elem in lists}]
         return lists + self.variant(e, lists)
 
     def variants(self, d):
@@ -57,6 +58,11 @@ class TestATM(unittest.TestCase):
     def test_get_50(self):
         atm = ATM({5: 0, 10: 0, 20: 3, 50: 0, 100: 5})
         self.assertEqual(atm.get(50), "I can't give that amount")
+
+    def test_get_speed(self):
+        atm = ATM({5: 6, 10: 5, 20: 2, 50: 1, 100: 1})
+        self.assertEqual(atm.get(30), {(5, 5, 5, 5, 5, 5), (5, 5, 5, 5, 10), (5, 5, 10, 10),  (5, 5, 20), (10, 10, 10),
+                                    (10, 20)})
 
 
 if __name__ == "__main__":
