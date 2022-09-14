@@ -67,12 +67,12 @@ class TestATM(unittest.TestCase):
         self.assertEqual(atm.get(30), {(5, 5, 5, 5, 5, 5), (5, 5, 5, 5, 10), (5, 5, 10, 10), (5, 5, 20), (10, 10, 10),
                                        (10, 20)})
 
-    def test_can_get_with_large_number_of_banknotes_5(self):
-        atm = ATM({5: 950, 10: 10, 20: 2, 50: 1000, 100: 2000})
+    def test_can_get_5_with_large_number_of_banknotes(self):
+        atm = ATM({5: 950, 10: 10, 20: 1000, 50: 1000, 100: 2000})
         self.assertEqual(atm.get(5), {(5, )})
 
-    def test_can_get_with_large_number_of_banknotes_10(self):
-        atm = ATM({5: 2, 10: 400, 20: 2, 50: 1000, 100: 2000})
+    def test_can_get_10_with_large_number_of_banknotes(self):
+        atm = ATM({5: 2, 10: 400, 20: 1000, 50: 1000, 100: 2000})
         self.assertEqual(atm.get(10), {(10, ), (5, 5)})
 
 if __name__ == "__main__":
