@@ -8,9 +8,10 @@ class ATM:
 
     def get_list(self, total):
         denom = list(reduce(lambda a, acc: a + acc, map(lambda x, y: ([x] * (total // x) if (total // x) <= y
-                                                                      else [x] * y) if x <= total else [],
-                                                        self.denomination.keys(), self.denomination.values())))
-        return denom
+                                                                      else [x] * y)
+        if x <= total else [], self.denomination.keys(),
+                                                        self.denomination.values())))
+        return denom[::-1]
 
     def variant(self, e, lists):
         return [] if len(lists) == 0 else [[e] + lists[0]] + self.variant(e, lists[1:])
@@ -19,11 +20,11 @@ class ATM:
         lists = [list(elem) for elem in {tuple(elem) for elem in lists}]
         return lists + self.variant(e, lists)
 
-    def variants(self, d):
-        return [[]] if len(d) == 0 else self.duplicate(d[0], self.variants(d[1:]))
+    def variants(self, d, total):
+        return [[]] if len(d) == 0 and sum(d) < total else self.duplicate(d[0], self.variants(d[1:], total))
 
     def get(self, total):
-        res = list(filter(lambda x: x and sum(x) == total, self.variants(self.get_list(total))))
+        res = list(filter(lambda x: x and sum(x) == total, self.variants(self.get_list(total)[:30], total)))
         unique = {tuple(elem) for elem in res}
         return unique or "I can't give that amount"
 
@@ -70,11 +71,21 @@ class TestATM(unittest.TestCase):
 
     def test_can_get_5_with_large_number_of_banknotes(self):
         atm = ATM({5: 950, 10: 10, 20: 1000, 50: 1000, 100: 2000})
-        self.assertEqual(atm.get(5), {(5, )})
+        self.assertEqual(atm.get(5), {(5,)})
 
     def test_can_get_10_with_large_number_of_banknotes(self):
         atm = ATM({5: 1000, 10: 1000, 20: 1000, 50: 1000, 100: 2000})
         self.assertEqual(atm.get(20), {(10, 10), (5, 5, 5, 5), (5, 5, 10), (20,)})
+
+    def test_can_get_5000(self):
+        atm = ATM({5: 560, 10: 500, 20: 300, 50: 500, 100: 100, 200: 1000})
+        self.assertEqual(atm.get(5000), {(200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200,
+                                          200, 200, 200, 200, 200, 200, 200, 200, 100, 100, 100, 100),
+                                         (200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200,
+                                          200, 200, 200, 200, 200, 200, 200, 200, 200, 100, 100),
+                                         (200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200,
+                                          200, 200, 200,  200, 200, 200, 200, 200, 200, 200)})
+
 
 if __name__ == "__main__":
     unittest.main()
