@@ -1,7 +1,5 @@
 import unittest
 from functools import reduce
-import sys
-sys.setrecursionlimit(100000)
 
 
 class ATM:
