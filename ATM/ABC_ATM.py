@@ -1,10 +1,16 @@
 import unittest
+from enum import Enum
 from functools import reduce
 from abc import ABC, abstractmethod
 
 
+class StrategyType(Enum):
+    MinimumNumberOfBanknotes = 'MinimumNumberOfBanknotes'
+    MaximumNumberOfKeys = 'MaximumNumberOfKeys'
+    MaximumNumberOfBanknotes = 'MaximumNumberOfBanknotes'
+
 class ATM:
-    def __init__(self, denomination, abc_variant='MinimumNumberOfBanknotes'):
+    def __init__(self, denomination, abc_variant=StrategyType.MinimumNumberOfBanknotes):
         self.denomination = denomination
         self.abc_variant = abc_variant
 
@@ -35,13 +41,18 @@ class ATM:
             total) != "I can't give that amount" else "I can't give that amount"
 
     def strategy(self, variants):
-        if self.abc_variant == 'MinimumNumberOfBanknotes':
-            v1 = MinimumNumberOfBanknotes.strategy(variants)
-            return v1
-        if self.abc_variant == 'MaximumNumberOfKeys':
-            return MaximumNumberOfKeys.strategy(variants)
-        if self.abc_variant == 'MaximumNumberOfBanknotes':
-            return MaximumNumberOfBanknotes.strategy(variants)
+        return StrategyFabric.get_strategy(self.abc_variant).strategy(variants)
+
+
+class StrategyFabric:
+    def get_strategy(variant):
+        if variant == StrategyType.MinimumNumberOfBanknotes:
+            return MinimumNumberOfBanknotes()
+        if variant == StrategyType.MaximumNumberOfKeys:
+            return MaximumNumberOfKeys()
+        if variant == StrategyType.MaximumNumberOfBanknotes:
+            return MaximumNumberOfBanknotes()
+        return None
 
 
 class Strategy(ABC):
@@ -51,17 +62,17 @@ class Strategy(ABC):
 
 
 class MinimumNumberOfBanknotes(Strategy):
-    def strategy(variants):
+    def strategy(self, variants):
         return {key: min(variants, key=len).count(key) for key in min(variants, key=len)}
 
 
 class MaximumNumberOfBanknotes(Strategy):
-    def strategy(variants):
+    def strategy(self, variants):
         return {key: max(variants, key=len).count(key) for key in max(variants, key=len)}
 
 
 class MaximumNumberOfKeys(Strategy):
-    def strategy(variants):
+    def strategy(self, variants):
         return max(({key: elem.count(key) for key in elem} for elem in variants), key=len)
 
 
@@ -79,11 +90,11 @@ class TestATM(unittest.TestCase):
         self.assertEqual(atm.get(15), {5: 1, 10: 1})
 
     def test_get_15_MaximumNumberOfBanknotes(self):
-        atm = ATM({5: 3, 10: 2, 20: 1, 50: 1, 100: 1}, 'MaximumNumberOfBanknotes')
+        atm = ATM({5: 3, 10: 2, 20: 1, 50: 1, 100: 1}, StrategyType.MaximumNumberOfBanknotes)
         self.assertEqual(atm.get(15), {5: 3})
 
     def test_get_15_MaximumNumberOfKeys(self):
-        atm = ATM({5: 3, 10: 2, 20: 1, 50: 1, 100: 1}, 'MaximumNumberOfKeys')
+        atm = ATM({5: 3, 10: 2, 20: 1, 50: 1, 100: 1}, StrategyType.MaximumNumberOfKeys)
         self.assertEqual(atm.get(15), {5: 1, 10: 1})
 
     def test_get_10(self):
@@ -99,11 +110,11 @@ class TestATM(unittest.TestCase):
         self.assertEqual(atm.get(30), {20: 1, 10: 1})
 
     def test_get_30_MaximumNumberOfKeys(self):
-        atm = ATM({5: 6, 10: 5, 20: 2, 50: 1, 100: 1}, 'MaximumNumberOfKeys')
+        atm = ATM({5: 6, 10: 5, 20: 2, 50: 1, 100: 1}, StrategyType.MaximumNumberOfKeys)
         self.assertEqual(atm.get(30), {20: 1, 5: 2})
 
     def test_get_30_MaximumNumberOfBanknotes(self):
-        atm = ATM({5: 6, 10: 5, 20: 2, 50: 1, 100: 1}, 'MaximumNumberOfBanknotes')
+        atm = ATM({5: 6, 10: 5, 20: 2, 50: 1, 100: 1}, StrategyType.MaximumNumberOfBanknotes)
         self.assertEqual(atm.get(30), {5: 6})
 
     def test_can_get_5_with_large_number_of_banknotes(self):
@@ -111,15 +122,15 @@ class TestATM(unittest.TestCase):
         self.assertEqual(atm.get(5), {5: 1})
 
     def test_can_get_5000_MinimumNumberOfBanknotes(self):
-        atm = ATM({5: 560, 10: 500, 20: 300, 50: 500, 100: 100, 200: 1000}, 'MinimumNumberOfBanknotes')
+        atm = ATM({5: 560, 10: 500, 20: 300, 50: 500, 100: 100, 200: 1000}, StrategyType.MinimumNumberOfBanknotes)
         self.assertEqual(atm.get(5000), {200: 25})
 
     def test_can_get_5000_MaximumNumberOfKeys(self):
-        atm = ATM({5: 560, 10: 500, 20: 300, 50: 500, 100: 100, 200: 1000}, 'MaximumNumberOfKeys')
+        atm = ATM({5: 560, 10: 500, 20: 300, 50: 500, 100: 100, 200: 1000}, StrategyType.MaximumNumberOfKeys)
         self.assertEqual(atm.get(5000), {100: 6, 200: 22})
 
     def test_can_get_5000_MaximumNumberOfBanknotes(self):
-        atm = ATM({5: 560, 10: 500, 20: 300, 50: 500, 100: 100, 200: 1000}, 'MaximumNumberOfBanknotes')
+        atm = ATM({5: 560, 10: 500, 20: 300, 50: 500, 100: 100, 200: 1000}, StrategyType.MaximumNumberOfBanknotes)
         self.assertEqual(atm.get(5000), {100: 14, 200: 18})
 
 
