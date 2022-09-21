@@ -10,8 +10,8 @@ class ATM:
 
     def get_list(self, total):
         denom = list(reduce(lambda a, acc: a + acc, map(lambda x, y: ([x] * (total // x) if (total // x) <= y
-                                                                      else [x] * y)
-        if x <= total else [], self.denomination.keys(),
+                                                                      else [x] * y) if x <= total else [],
+                                                        self.denomination.keys(),
                                                         self.denomination.values())))
         return denom[::-1]
 
