@@ -85,7 +85,7 @@ class TestATM(unittest.TestCase):
         atm = ATM({5: 1, 10: 0, 20: 1, 50: 1, 100: 1})
         self.assertEqual(atm.get(10), "I can't give that amount")
 
-    def test_get_50(self):
+    def test_get_50_with_min_banknotes(self):
         atm = ATM({5: 0, 10: 0, 20: 3, 50: 0, 100: 5})
         self.assertEqual(atm.get(50), "I can't give that amount")
 
