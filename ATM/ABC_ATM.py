@@ -3,7 +3,7 @@ from functools import reduce
 
 
 class ATM:
-    def __init__(self, denomination, strategy='min_banknots'):
+    def __init__(self, denomination, strategy='min_banknotes'):
         self.denomination = denomination
         self.strategy = strategy
 
@@ -42,11 +42,11 @@ class ATM:
 
 class Strategy:
     def factory(type):
-        if type == 'min_banknots':
+        if type == 'min_banknotes':
             return MinBanknotes()
         if type == 'max_keys':
             return MaxKeys()
-        if type == 'max_banknots':
+        if type == 'max_banknotes':
             return MaxBanknotes()
         return None
 
@@ -98,7 +98,7 @@ class TestATM(unittest.TestCase):
         self.assertEqual(atm.get(30), {20: 1, 5: 2})
 
     def test_get_30_MaximumNumberOfBanknotes(self):
-        atm = ATM({5: 6, 10: 5, 20: 2, 50: 1, 100: 1}, 'max_banknots')
+        atm = ATM({5: 6, 10: 5, 20: 2, 50: 1, 100: 1}, 'max_banknotes')
         self.assertEqual(atm.get(30), {5: 6})
 
     def test_can_get_5_with_large_number_of_banknotes(self):
@@ -106,7 +106,7 @@ class TestATM(unittest.TestCase):
         self.assertEqual(atm.get(5), {5: 1})
 
     def test_can_get_5000_MinimumNumberOfBanknotes(self):
-        atm = ATM({5: 560, 10: 500, 20: 300, 50: 500, 100: 100, 200: 1000}, 'min_banknots')
+        atm = ATM({5: 560, 10: 500, 20: 300, 50: 500, 100: 100, 200: 1000}, 'min_banknotes')
         self.assertEqual(atm.get(5000), {200: 25})
 
     def test_can_get_5000_MaximumNumberOfKeys(self):
@@ -117,7 +117,7 @@ class TestATM(unittest.TestCase):
         self.assertEqual(atm.denomination, {5: 560, 10: 500, 20: 300, 50: 500, 100: 88, 200: 956})
 
     def test_can_get_5000_MaximumNumberOfBanknotes(self):
-        atm = ATM({5: 560, 10: 500, 20: 300, 50: 500, 100: 100, 200: 1000}, 'max_banknots')
+        atm = ATM({5: 560, 10: 500, 20: 300, 50: 500, 100: 100, 200: 1000}, 'max_banknotes')
         self.assertEqual(atm.get(5000), {100: 14, 200: 18})
 
 
