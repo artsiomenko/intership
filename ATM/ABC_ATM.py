@@ -30,20 +30,23 @@ class ATM:
         return unique or "I can't give that amount"
 
     def get(self, total):
-        return self.withdraw(self.get_unique(total)) if self.get_unique(
-            total) != "I can't give that amount" else "I can't give that amount"
+        dict_for_get = self.withdraw(self.get_unique(total))
+        if self.get_unique(total) != "I can't give that amount":
+            for key, value in dict_for_get.items():
+                self.denomination[key] -= value
+        return dict_for_get if self.get_unique(total) != "I can't give that amount" else "I can't give that amount"
 
     def withdraw(self, variants):
-         return Strategy.get(self.strategy).apply_to(variants)
+        return Strategy.factory(self.strategy).apply_to(variants)
 
 
 class Strategy:
-    def get(variant):
-        if variant == 'min_banknots':
+    def factory(type):
+        if type == 'min_banknots':
             return MinBanknotes()
-        if variant == 'max_keys':
+        if type == 'max_keys':
             return MaxKeys()
-        if variant == 'max_banknots':
+        if type == 'max_banknots':
             return MaxBanknotes()
         return None
 
@@ -71,18 +74,12 @@ class TestATM(unittest.TestCase):
     def test_get_5(self):
         atm = ATM({5: 2, 10: 2, 20: 2, 50: 2, 100: 2})
         self.assertEqual(atm.get(5), {5: 1})
+        self.assertEqual(atm.denomination, {5: 1, 10: 2, 20: 2, 50: 2, 100: 2})
 
     def test_get_15_MinimumNumberOfBanknotes(self):
         atm = ATM({5: 3, 10: 2, 20: 1, 50: 1, 100: 1})
         self.assertEqual(atm.get(15), {5: 1, 10: 1})
-
-    def test_get_15_MaximumNumberOfBanknotes(self):
-        atm = ATM({5: 3, 10: 2, 20: 1, 50: 1, 100: 1}, 'max_banknots')
-        self.assertEqual(atm.get(15), {5: 3})
-
-    def test_get_15_MaximumNumberOfKeys(self):
-        atm = ATM({5: 3, 10: 2, 20: 1, 50: 1, 100: 1}, 'max_keys')
-        self.assertEqual(atm.get(15), {5: 1, 10: 1})
+        self.assertEqual(atm.denomination, {5: 2, 10: 1, 20: 1, 50: 1, 100: 1})
 
     def test_get_10(self):
         atm = ATM({5: 1, 10: 0, 20: 1, 50: 1, 100: 1})
@@ -115,6 +112,9 @@ class TestATM(unittest.TestCase):
     def test_can_get_5000_MaximumNumberOfKeys(self):
         atm = ATM({5: 560, 10: 500, 20: 300, 50: 500, 100: 100, 200: 1000}, 'max_keys')
         self.assertEqual(atm.get(5000), {100: 6, 200: 22})
+        self.assertEqual(atm.denomination, {5: 560, 10: 500, 20: 300, 50: 500, 100: 94, 200: 978})
+        self.assertEqual(atm.get(5000), {100: 6, 200: 22})
+        self.assertEqual(atm.denomination, {5: 560, 10: 500, 20: 300, 50: 500, 100: 88, 200: 956})
 
     def test_can_get_5000_MaximumNumberOfBanknotes(self):
         atm = ATM({5: 560, 10: 500, 20: 300, 50: 500, 100: 100, 200: 1000}, 'max_banknots')
