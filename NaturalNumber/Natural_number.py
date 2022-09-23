@@ -7,15 +7,16 @@ class Zero(NaturalNumber):
     def __init__(self, value=NaturalNumber()):
         self.value = value
 
+
 zero = Zero()
-print(zero.next())
 one = Zero(Zero())
-print(one.next())
 two = Zero(Zero(Zero()))
-print(two.next())
 three = Zero(Zero(Zero(Zero())))
-print(three.next())
 four = Zero(Zero(Zero(Zero(Zero()))))
+print(zero.next())
+print(one.next())
+print(two.next())
+print(three.next())
 print(three.next())
 print(one == two)
 print(one == one)
