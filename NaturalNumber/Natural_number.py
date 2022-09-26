@@ -20,7 +20,6 @@ class Zero:
 
 class Num(Zero):
     def __init__(self, parent):
-        super().__init__()
         self.parent = parent
 
     def __eq__(self, other):
@@ -66,6 +65,12 @@ class TestNumbers(unittest.TestCase):
         two1 = one + one
         two2 = Num(Num(Zero()))
         self.assertEqual(two1 == two2, True)
+
+    def test_one_eq_two_with_copy(self):
+        one = Num(Zero())
+        one1 = one
+        two = one + one1
+        self.assertEqual(two == Num(Num(Zero())), True)
 
     def test_two_sub_one(self):
         one = Num(Zero())
