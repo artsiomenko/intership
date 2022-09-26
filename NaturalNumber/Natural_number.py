@@ -14,6 +14,9 @@ class Zero:
     def __sub__(self, other):
         return other
 
+    def __mul__(self, other):
+        return other
+
 
 class Num(Zero):
     def __init__(self, parent):
@@ -38,6 +41,14 @@ class Num(Zero):
             other = other.parent
         return self
 
+    def __mul__(self, other):
+        result = self
+        other = other.parent
+        while other.parent:
+            result = Num.__add__(result, self)
+            other = other.parent
+        return result
+
 
 class TestNumbers(unittest.TestCase):
     def test_one_eq_one_true(self):
@@ -60,6 +71,11 @@ class TestNumbers(unittest.TestCase):
         one = Num(Zero())
         two = Num(Num(Zero()))
         self.assertEqual(two - one == one, True)
+
+    def test_one_mul_three(self):
+        one = Num(Zero())
+        three = Num(Num(Num(Zero())))
+        self.assertEqual(one * three == three, True)
 
 
 if __name__ == "__main__":
