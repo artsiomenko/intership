@@ -82,6 +82,20 @@ class TestNumbers(unittest.TestCase):
         three = Num(Num(Num(Zero())))
         self.assertEqual(one * three == three, True)
 
+    def test_two_mul_three(self):
+        one = Num(Zero())
+        two = one + one
+        three = Num(Num(Num(Zero())))
+        six = three + three
+        self.assertEqual(two * three == six, True)
+
+    def test_two_mul_three_false(self):
+        one = Num(Zero())
+        two = one + one
+        three = Num(Num(Num(Zero())))
+        six = three + three
+        self.assertEqual(two * three == three, False)
+
 
 if __name__ == "__main__":
     unittest.main()
