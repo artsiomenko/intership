@@ -17,8 +17,11 @@ class Zero:
     def __mul__(self, other):
         return other
 
+    def __floordiv__(self, other):
+        return other
 
-class Num(Zero):
+
+class Num:
     def __init__(self, parent):
         self.parent = parent
 
@@ -48,6 +51,14 @@ class Num(Zero):
             other = other.parent
         return result
 
+    def __floordiv__(self, other):
+        result = self
+        other = other.parent
+        while other.parent:
+            result = Num.__sub__(result, self)
+            other = other.parent
+        return result
+
 
 class TestNumbers(unittest.TestCase):
     def test_one_eq_one_true(self):
@@ -62,9 +73,14 @@ class TestNumbers(unittest.TestCase):
 
     def test_one_add_one_eq_two(self):
         one = Num(Zero())
-        two1 = one + one
-        two2 = Num(Num(Zero()))
-        self.assertEqual(two1 == two2, True)
+        self.assertEqual(one + Num(Zero()) == Num(Num(Zero())), True)
+        self.assertEqual(one + Num(one) + Num(Zero()) == Num(Num(Num(Num(Zero())))), True)
+        self.assertEqual(one == Num(Zero()), True)
+        self.assertEqual(Num(Zero()) + one, Num(Num(Zero())))
+        self.assertEqual(one, Num(Zero()))
+        self.assertTrue(one + Zero() == one)
+        self.assertTrue(Zero() + one == one)
+        self.assertTrue(Zero() + Zero() == Zero())
 
     def test_one_eq_two_with_copy(self):
         one = Num(Zero())
