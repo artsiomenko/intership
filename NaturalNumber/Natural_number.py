@@ -17,9 +17,6 @@ class Zero:
     def __mul__(self, other):
         return other
 
-    def __floordiv__(self, other):
-        return other
-
 
 class Num:
     def __init__(self, parent):
@@ -48,14 +45,6 @@ class Num:
         other = other.parent
         while other.parent:
             result = Num.__add__(result, self)
-            other = other.parent
-        return result
-
-    def __floordiv__(self, other):
-        result = self
-        other = other.parent
-        while other.parent:
-            result = Num.__sub__(result, self)
             other = other.parent
         return result
 
