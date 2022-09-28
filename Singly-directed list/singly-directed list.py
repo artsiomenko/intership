@@ -23,7 +23,7 @@ class List:
             cur.next = node
 
     def __str__(self):
-        return f"{(reduce(lambda acc, x: acc + f'{x}', self, ''))}"
+        return f"{(reduce(lambda acc, x: f'{acc} {x}', self, ''))}"
 
     def __iter__(self):
         while self.head is not None:
@@ -40,8 +40,27 @@ class List:
 
 
 class Ordered_list(List):
-    def __str__(self):
-        return sorted((super().__str__()))
+    def append(self, item):
+        node = Node(item)
+        if self.head is None:
+            self.head = node
+        else:
+            if self.head.item < item:
+                a = self.head.next
+                self.head.next = node
+                node.next = a
+            else:
+                a = self.head
+                self.head = node
+                node.next = a
+
+
+test_list = Ordered_list()
+test_list.append(5)
+test_list.append(1)
+test_list.append(2)
+
+print(test_list)
 
 
 class TestNumbers(unittest.TestCase):
@@ -84,5 +103,3 @@ class TestNumbers(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
-
