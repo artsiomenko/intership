@@ -23,7 +23,7 @@ class List:
             cur.next = node
 
     def __str__(self):
-        return f'[]' if self.head is None else f"{sorted(list(map(lambda x: x, self)))}"
+        return f"{(reduce(lambda acc, x: acc + f'{x}', self, ''))}"
 
     def __iter__(self):
         while self.head is not None:
@@ -39,27 +39,32 @@ class List:
         return False
 
 
+class Ordered_list(List):
+    def __str__(self):
+        return sorted((super().__str__()))
+
+
 class TestNumbers(unittest.TestCase):
     def test_None(self):
-        test_list = List()
-        self.assertEqual(test_list.__str__(), '[]')
+        test_list = Ordered_list()
+        self.assertEqual(test_list.__str__(), [])
 
     def test_one_element(self):
-        test_list = List()
+        test_list = Ordered_list()
         test_list.append(1)
-        self.assertEqual(test_list.__str__(), '[1]')
+        self.assertEqual(test_list.__str__(), ['1'])
 
     def test_five_elements(self):
-        test_list = List()
+        test_list = Ordered_list()
         test_list.append(1)
         test_list.append(5)
         test_list.append(2)
         test_list.append(3)
         test_list.append(4)
-        self.assertEqual(test_list.__str__(), '[1, 2, 3, 4, 5]')
+        self.assertEqual(test_list.__str__(), ['1', '2', '3', '4', '5'])
 
     def test_search_true(self):
-        test_list = List()
+        test_list = Ordered_list()
         test_list.append(1)
         test_list.append(5)
         test_list.append(2)
@@ -68,22 +73,13 @@ class TestNumbers(unittest.TestCase):
         self.assertTrue(test_list.search(3))
 
     def test_search_false(self):
-        test_list = List()
+        test_list = Ordered_list()
         test_list.append(1)
         test_list.append(5)
         test_list.append(2)
         test_list.append(3)
         test_list.append(4)
         self.assertFalse(test_list.search(10))
-
-    def test_to_print(self):
-        test_list = List()
-        test_list.append(1)
-        test_list.append(5)
-        test_list.append(2)
-        test_list.append(3)
-        test_list.append(4)
-        self.assertEqual(test_list.__str__(), '[1, 2, 3, 4, 5]')
 
 
 if __name__ == "__main__":
