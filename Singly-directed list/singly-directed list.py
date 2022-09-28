@@ -23,9 +23,7 @@ class List:
             cur.next = node
 
     def __str__(self):
-        if self.head is None:
-            return f'[]'
-        return f"{sorted(list(map(lambda x: x, self)))}"
+        return f'[]' if self.head is None else f"{sorted(list(map(lambda x: x, self)))}"
 
     def __iter__(self):
         while self.head is not None:
