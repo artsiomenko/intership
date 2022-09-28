@@ -1,4 +1,5 @@
 import unittest
+from functools import reduce
 
 
 class Node:
@@ -21,16 +22,15 @@ class List:
                 cur = cur.next
             cur.next = node
 
-    def to_print(self):
-        result = []
-        cur = self.head
-        if cur is None:
-            return []
-        result.append(cur.item)
-        while cur.next:
-            cur = cur.next
-            result.append(cur.item)
-        return sorted(result)
+    def __str__(self):
+        if self.head is None:
+            return f'[]'
+        return f"{sorted(list(map(lambda x: x, self)))}"
+
+    def __iter__(self):
+        while self.head is not None:
+            yield self.head.item
+            self.head = self.head.next
 
     def search(self, item):
         cur = self.head
@@ -43,49 +43,49 @@ class List:
 
 class TestNumbers(unittest.TestCase):
     def test_None(self):
-        array = List()
-        self.assertEqual(array.to_print(), [])
+        test_list = List()
+        self.assertEqual(test_list.__str__(), '[]')
 
     def test_one_element(self):
-        array = List()
-        array.append(1)
-        self.assertEqual(array.to_print(), [1])
+        test_list = List()
+        test_list.append(1)
+        self.assertEqual(test_list.__str__(), '[1]')
 
     def test_five_elements(self):
-        array = List()
-        array.append(1)
-        array.append(5)
-        array.append(2)
-        array.append(3)
-        array.append(4)
-        self.assertEqual(array.to_print(), [1, 2, 3, 4, 5])
+        test_list = List()
+        test_list.append(1)
+        test_list.append(5)
+        test_list.append(2)
+        test_list.append(3)
+        test_list.append(4)
+        self.assertEqual(test_list.__str__(), '[1, 2, 3, 4, 5]')
 
     def test_search_true(self):
-        array = List()
-        array.append(1)
-        array.append(5)
-        array.append(2)
-        array.append(3)
-        array.append(4)
-        self.assertTrue(array.search(3))
+        test_list = List()
+        test_list.append(1)
+        test_list.append(5)
+        test_list.append(2)
+        test_list.append(3)
+        test_list.append(4)
+        self.assertTrue(test_list.search(3))
 
     def test_search_false(self):
-        array = List()
-        array.append(1)
-        array.append(5)
-        array.append(2)
-        array.append(3)
-        array.append(4)
-        self.assertFalse(array.search(10))
+        test_list = List()
+        test_list.append(1)
+        test_list.append(5)
+        test_list.append(2)
+        test_list.append(3)
+        test_list.append(4)
+        self.assertFalse(test_list.search(10))
 
     def test_to_print(self):
-        array = List()
-        array.append(1)
-        array.append(5)
-        array.append(2)
-        array.append(3)
-        array.append(4)
-        self.assertEqual(array.to_print(), [1, 2, 3, 4, 5])
+        test_list = List()
+        test_list.append(1)
+        test_list.append(5)
+        test_list.append(2)
+        test_list.append(3)
+        test_list.append(4)
+        self.assertEqual(test_list.__str__(), '[1, 2, 3, 4, 5]')
 
 
 if __name__ == "__main__":
