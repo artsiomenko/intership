@@ -56,6 +56,15 @@ class OrderedList(List):
                 current.next = node
 
 
+test_list = OrderedList()
+test_list.append(1)
+test_list.append(5)
+test_list.append(3)
+test_list.append(4)
+print(test_list.__iter__())
+
+
+
 class TestOrderedList(unittest.TestCase):
     def test_None(self):
         test_list = OrderedList()
