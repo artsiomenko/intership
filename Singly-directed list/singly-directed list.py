@@ -23,7 +23,7 @@ class List:
             cur.next = node
 
     def __str__(self):
-        return f"{(reduce(lambda acc, x: f'{acc} {x}', self, ''))}"
+        return f"{(reduce(lambda acc, x: f'{acc} {x}', self, ''))}".lstrip()
 
     def __iter__(self):
         while self.head is not None:
@@ -64,7 +64,7 @@ class TestOrderedList(unittest.TestCase):
     def test_one_element(self):
         test_list = OrderedList()
         test_list.append(1)
-        self.assertEqual(test_list.__str__(), ' 1')
+        self.assertEqual(test_list.__str__(), '1')
 
     def test_five_elements(self):
         test_list = OrderedList()
@@ -73,7 +73,7 @@ class TestOrderedList(unittest.TestCase):
         test_list.append(2)
         test_list.append(3)
         test_list.append(4)
-        self.assertEqual(test_list.__str__(), ' 1 2 3 4 5')
+        self.assertEqual(test_list.__str__(), '1 2 3 4 5')
 
     def test_search_true(self):
         test_list = OrderedList()
