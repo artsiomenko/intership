@@ -1,43 +1,17 @@
-# Дан массив временных интервалов для людей, которые заходят и выходят из комнаты. Массивы состоят из времени начала
-# и окончания [[s1, e1], [s2, e2], ...] (si <ei). Какое максимальное количество людей в комнате может быть одновременно?
-# Примеры:
-# Ввод: [[2, 10], [3, 4], [6, 9]]
-# Вывод: 2
-# Ввод: [[1, 3], [2, 4], [2, 5], [3, 4], [3, 6], [4, 5], [5, 6]]
-# Вывод: 4
-# Ввод: [[1, 8], [2, 7], [3, 5], [5, 7], [6, 7], [6, 8], [7, 8]]
-# Вывод: 5
 import unittest
 import datetime
 
 
-class meeting:
-    def __init__(self, start, end, pos):
-        self.start = start
-        self.end = end
-        self.pos = pos
-
-
-def intersections(list_meeting, n, hours):
-    res = []
+def get_max(list_meeting):
+    hours = sorted(list({i for i in [elem[0] for elem in list_meeting] + [elem[1] for elem in list_meeting]}))
+    people = []
     for hour in hours:
         counter = 0
-        for j in range(n):
-            if list_meeting[j].start <= hour < list_meeting[j].end:
+        for j in range(len(list_meeting)):
+            if list_meeting[j][0] <= hour < list_meeting[j][1]:
                 counter += 1
-        res.append(counter)
-    return max(res)
-
-
-def get_max(span):
-    list_start = [elem[0] for elem in span]
-    list_end = [elem[1] for elem in span]
-    list_meeting = []
-    for i in range(len(list_start)):
-        list_meeting.append(meeting(list_start[i], list_end[i], i))
-    list_meeting.sort(key=lambda x: x.end)
-    hours = sorted(list({i for i in list_end + list_start}))
-    return intersections(list_meeting, len(list_start), hours)
+        people.append(counter)
+    return max(people)
 
 
 class TestLastTask(unittest.TestCase):

@@ -19,15 +19,14 @@ class meeting:
 
 
 def intersections(list_meeting, n):
-    max_counter = 0
+    people = []
     for i in range(n):
         counter = 0
         for j in range(i, n):
             if list_meeting[j].start < list_meeting[i].end:
                 counter += 1
-        if counter > max_counter:
-            max_counter = counter
-    return max_counter
+        people.append(counter)
+    return max(people)
 
 
 def get_max(span):
