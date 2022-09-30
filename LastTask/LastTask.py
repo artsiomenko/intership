@@ -18,13 +18,12 @@ class meeting:
         self.pos = pos
 
 
-def intersections(l, n):
-    l.sort(key=lambda x: x.end)
+def intersections(list_meeting, n):
     max_counter = 0
     for i in range(n):
         counter = 0
         for j in range(i, n):
-            if l[j].start < l[i].end:
+            if list_meeting[j].start < list_meeting[i].end:
                 counter += 1
         if counter > max_counter:
             max_counter = counter
@@ -32,13 +31,13 @@ def intersections(l, n):
 
 
 def get_max(span):
-    s = [elem[0] for elem in span]
-    f = [elem[1] for elem in span]
-    l = []
-    for i in range(len(s)):
-        l.append(meeting(s[i], f[i], i))
-    l.sort(key=lambda x: x.end)
-    return intersections(l, len(s))
+    list_start = [elem[0] for elem in span]
+    list_end = [elem[1] for elem in span]
+    list_meeting = []
+    for i in range(len(list_start)):
+        list_meeting.append(meeting(list_start[i], list_end[i], i))
+    list_meeting.sort(key=lambda x: x.end)
+    return intersections(list_meeting, len(list_start))
 
 
 class TestLastTask(unittest.TestCase):
@@ -52,11 +51,11 @@ class TestLastTask(unittest.TestCase):
         self.assertEqual(get_max([[1, 8], [2, 7], [3, 5], [5, 7], [6, 7], [6, 8], [7, 8]]), 5)
 
     def test_datetime(self):
-        x1 = datetime.time(2, 00, 00)
+        x1 = datetime.time(2, 15, 00)
         y1 = datetime.time(10, 00, 00)
-        x2 = datetime.time(3, 00, 00)
+        x2 = datetime.time(3, 15, 00)
         y2 = datetime.time(4, 00, 00)
-        x3 = datetime.time(6, 00, 00)
+        x3 = datetime.time(6, 40, 00)
         y3 = datetime.time(9, 15, 10)
         self.assertEqual(get_max([[x1, y1], [x2, y2], [x3, y3]]), 2)
 
