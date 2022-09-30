@@ -9,23 +9,24 @@
 # Вывод: 5
 import unittest
 from functools import reduce
+import numpy as np
 
 
 def search(list_time):
-    time = reduce(lambda x, acc: acc + x, [[i for i in range(elem[0], elem[1])] for elem in list_time])
+    time = reduce(lambda x, acc: acc + x, [[i for i in np.arange(elem[0], elem[1], 0.25)] for elem in list_time])
     time_dict = {key: time.count(key) for key in time}
     return max(time_dict.values())
 
 
 class TestLastTask(unittest.TestCase):
     def test_1(self):
-        self.assertEqual(search([[2, 10], [3, 4], [6, 9]]), 2)
+        self.assertEqual(search([[2.0, 10.0], [3.0, 4.0], [6.0, 9.0]]), 2.0)
 
     def test_2(self):
-        self.assertEqual(search([[1, 3], [2, 4], [2, 5], [3, 4], [3, 6], [4, 5], [5, 6]]), 4)
+        self.assertEqual(search([[1, 3], [2, 4], [2, 5], [3, 4], [3, 6], [4, 5], [5, 6]]), 4.0)
 
     def test_3(self):
-        self.assertEqual(search([[1, 8], [2, 7], [3, 5], [5, 7], [6, 7], [6, 8], [7, 8]]), 5)
+        self.assertEqual(search([[1, 8], [2, 7], [3, 5], [5, 7], [6, 7], [6, 8], [7, 8]]), 5.0)
 
 
 if __name__ == "__main__":
