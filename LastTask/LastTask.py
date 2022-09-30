@@ -11,32 +11,16 @@ import unittest
 import datetime
 
 
-class meeting:
-    def __init__(self, start, end, pos):
-        self.start = start
-        self.end = end
-        self.pos = pos
-
-
-def intersections(list_meeting, n):
+def get_max(list_meeting):
+    list_meeting.sort(key=lambda x: x[1])
     people = []
-    for i in range(n):
+    for i in range(len(list_meeting)):
         counter = 0
-        for j in range(i, n):
-            if list_meeting[j].start < list_meeting[i].end:
+        for j in range(i, len(list_meeting)):
+            if list_meeting[j][0] < list_meeting[i][1]:
                 counter += 1
         people.append(counter)
     return max(people)
-
-
-def get_max(span):
-    list_start = [elem[0] for elem in span]
-    list_end = [elem[1] for elem in span]
-    list_meeting = []
-    for i in range(len(list_start)):
-        list_meeting.append(meeting(list_start[i], list_end[i], i))
-    list_meeting.sort(key=lambda x: x.end)
-    return intersections(list_meeting, len(list_start))
 
 
 class TestLastTask(unittest.TestCase):
