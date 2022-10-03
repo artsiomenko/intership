@@ -21,9 +21,8 @@ def get_max_yet(values):
         map(lambda elem: reduce(lambda acc, x: acc + 1 if x[0] <= elem <= x[1] else acc + 0, values, 0), hours))
 
 
-def get_max_yet_(values):
-    hours = list(map(lambda x: x[1], sorted([[x[0], 1] for x in values] + [[x[1], -1] for x in values],
-                                            key=lambda x: x[0])))
+def get_max_yet_(val):
+    hours = list(map(lambda x: x[1], sorted([[x[0], 1] for x in val] + [[x[1], -1] for x in val], key=lambda x: x[0])))
     return max(reduce(lambda acc, x: acc + [sum(hours[:len(acc)])], hours, [hours[0]]))
 
 
